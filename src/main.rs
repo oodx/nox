@@ -1,5 +1,4 @@
 use nox::server::NoxServer;
-use std::net::SocketAddr;
 
 #[cfg(feature = "config")]
 use nox::config::NoxConfig;

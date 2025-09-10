@@ -3,7 +3,6 @@ use hyper::{Request, Response, Method, StatusCode};
 use hyper::body::Incoming;
 use http_body_util::Full;
 use bytes::Bytes;
-use std::collections::HashMap;
 use std::convert::Infallible;
 
 pub struct MockRouter {

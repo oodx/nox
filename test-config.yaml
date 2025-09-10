@@ -1,0 +1,39 @@
+server:
+  host: "127.0.0.1"
+  port: 3001
+
+mock:
+  scenarios:
+    - name: "uat_tests"
+      routes:
+        - path: "/test/users"
+          method: "GET"
+          response:
+            status: 200
+            headers:
+              Content-Type: "application/json"
+            body: '{"users": [{"id": 1, "name": "Test User"}]}'
+        
+        - path: "/test/users/123"
+          method: "GET"
+          response:
+            status: 200
+            headers:
+              Content-Type: "application/json"
+            body: '{"id": 123, "name": "Test User", "email": "test@example.com"}'
+        
+        - path: "/test/posts"
+          method: "POST"
+          response:
+            status: 201
+            headers:
+              Content-Type: "application/json"
+            body: '{"id": 456, "title": "Test Post", "created": true}'
+        
+        - path: "/test/error"
+          method: "GET"
+          response:
+            status: 500
+            headers:
+              Content-Type: "application/json"
+            body: '{"error": "Test error", "code": 500}'
