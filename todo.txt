@@ -1,0 +1,9 @@
+- DO NOT CHANGE EDIT OR REMOVE the src_ref files
+
+- the project and binary should be called "nox" not "mini_api_server" this needs to be corrected everywhere
+  "mini_api_server" is the protoype name. Please make sure proper Nox and nox name is used in docs and code!
+
+- the src_ref features some examples and other miscellaneous code, the bin/project_setup_script.sh was intended
+  to create the right folder structure but pathing and namings may have drifted, this needs to be checked and fixed
+
+- lots of documentation, some conceptual integration and compatability notes.
