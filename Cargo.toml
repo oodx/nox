@@ -3,7 +3,7 @@ name = "nox"
 description = "Nox Server + Mock Support"
 license = "None (Private)"
 repository = "https://github.com/oodx/nox"
-version = "0.0.1"
+version = "0.1.0"
 edition = "2021"
 
 [[bin]]
