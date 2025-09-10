@@ -1,0 +1,39 @@
+server:
+  host: "127.0.0.1"
+  port: 3000
+
+mock:
+  scenarios:
+    - name: "api_v1"
+      routes:
+        - path: "/api/v1/users"
+          method: "GET"
+          response:
+            status: 200
+            headers:
+              Content-Type: "application/json"
+            body: '{"users": [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]}'
+        
+        - path: "/api/v1/users/123"
+          method: "GET"
+          response:
+            status: 200
+            headers:
+              Content-Type: "application/json"
+            body: '{"id": 123, "name": "Test User", "email": "test@example.com"}'
+        
+        - path: "/api/v1/posts"
+          method: "POST"
+          response:
+            status: 201
+            headers:
+              Content-Type: "application/json"
+            body: '{"id": 456, "title": "New Post", "created": true}'
+        
+        - path: "/error/500"
+          method: "GET"
+          response:
+            status: 500
+            headers:
+              Content-Type: "application/json"
+            body: '{"error": "Internal server error", "code": 500}'
