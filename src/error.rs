@@ -5,6 +5,8 @@ pub enum Error {
     Hyper(hyper::Error),
     Http(http::Error),
     Io(std::io::Error),
+    #[cfg(feature = "config")]
+    Yaml(serde_yaml::Error),
     Other(String),
 }
 
@@ -14,6 +16,8 @@ impl fmt::Display for Error {
             Error::Hyper(e) => write!(f, "Hyper error: {}", e),
             Error::Http(e) => write!(f, "HTTP error: {}", e),
             Error::Io(e) => write!(f, "IO error: {}", e),
+            #[cfg(feature = "config")]
+            Error::Yaml(e) => write!(f, "YAML error: {}", e),
             Error::Other(s) => write!(f, "Error: {}", s),
         }
     }
@@ -36,6 +40,13 @@ impl From<http::Error> for Error {
 impl From<std::io::Error> for Error {
     fn from(e: std::io::Error) -> Self {
         Error::Io(e)
+    }
+}
+
+#[cfg(feature = "config")]
+impl From<serde_yaml::Error> for Error {
+    fn from(e: serde_yaml::Error) -> Self {
+        Error::Yaml(e)
     }
 }
 
