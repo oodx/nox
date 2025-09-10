@@ -1,18 +1,22 @@
 #!/bin/bash
 
-echo "🚀 Setting up Mini API Server project structure..."
+echo "🚀 Setting up Nox Server project structure..."
 
-# Create main project directory
-PROJECT_DIR="mini-api-server"
-mkdir -p "$PROJECT_DIR"
-cd "$PROJECT_DIR"
+# Work in current directory (should be nox_server)
+echo "📁 Working in current directory: $(pwd)"
+echo "📁 Checking for src_ref directory..."
+
+if [ ! -d "src_ref" ]; then
+    echo "❌ Error: src_ref directory not found! Run this script from the nox_server root directory."
+    exit 1
+fi
 
 # Create source directory structure
-mkdir -p src/{server,plugins,session,auth,handlers,utils,cli,adapters}
+mkdir -p src/{server,plugins,session,auth,handlers,utils,cli,adapters,templates,config,error}
 mkdir -p examples
 
 echo "📁 Created directory structure:"
-echo "mini-api-server/"
+echo "nox_server/"
 echo "├── src/"
 echo "│   ├── server/"
 echo "│   ├── plugins/"
@@ -21,151 +25,118 @@ echo "│   ├── auth/"
 echo "│   ├── handlers/"
 echo "│   ├── utils/"
 echo "│   ├── cli/"
-echo "│   └── adapters/"
+echo "│   ├── adapters/"
+echo "│   ├── templates/"
+echo "│   ├── config/"
+echo "│   └── error/"
 echo "├── examples/"
 echo "└── (config files)"
 
-# Create placeholder files that need to be filled
-echo "📝 Creating placeholder files (you'll need to copy content from artifacts):"
+echo ""
+echo "📋 Copying and fixing files from src_ref/..."
 
-# Root level files
-touch Cargo.toml
-touch build.rs
-touch README.md
-touch mini-api-server.yaml
+# Function to copy and fix naming in files
+copy_and_fix() {
+    local src_file="$1"
+    local dest_file="$2"
+    
+    if [ ! -f "src_ref/$src_file" ]; then
+        echo "⚠️  Warning: src_ref/$src_file not found, skipping..."
+        return
+    fi
+    
+    echo "📄 $src_file → $dest_file"
+    # Copy file and replace mini_api_server with nox
+    sed 's/mini_api_server/nox/g; s/mini-api-server/nox/g; s/Mini API Server/Nox Server/g' "src_ref/$src_file" > "$dest_file"
+}
 
-# Main source files
-touch src/lib.rs
-touch src/main.rs
-touch src/error.rs
-touch src/config.rs
+# Copy and fix core files
+echo "🔧 Copying core framework files..."
+copy_and_fix "server_lib_rs.rs" "src/lib.rs"
+copy_and_fix "server_main_rs.rs" "src/main.rs"
+copy_and_fix "server_core_rs.rs" "src/server/mod.rs"
+copy_and_fix "server_error_rs.rs" "src/error/mod.rs"
+copy_and_fix "server_config_rs.rs" "src/config/mod.rs"
+copy_and_fix "build_script.rs" "build.rs"
 
-# Server module
-touch src/server/mod.rs
-touch src/server/router.rs
+# Copy plugin system files
+echo "🔌 Copying plugin system..."
+copy_and_fix "server_plugins_rs.rs" "src/plugins/mod.rs"
+copy_and_fix "server_plugin_manager_rs.rs" "src/plugins/manager.rs"
+copy_and_fix "server_mock_plugin_rs.rs" "src/plugins/mock.rs"
+copy_and_fix "server_health_plugin_rs.rs" "src/plugins/health.rs"
 
-# Plugins module
-touch src/plugins/mod.rs
-touch src/plugins/manager.rs
-touch src/plugins/mock.rs
-touch src/plugins/health.rs
-touch src/plugins/auth.rs
-touch src/plugins/session.rs
-touch src/plugins/logging.rs
-touch src/plugins/static_files.rs
+# Copy handler files
+echo "🌐 Copying request handlers..."
+copy_and_fix "server_handlers_rs.rs" "src/handlers/mod.rs"
+copy_and_fix "server_router_rs.rs" "src/server/router.rs"
+copy_and_fix "server_static_handler_rs.rs" "src/handlers/static_files.rs"
+copy_and_fix "server_proxy_handler_rs.rs" "src/handlers/proxy.rs"
 
-# Session module
-touch src/session/mod.rs
-touch src/session/memory.rs
-touch src/session/file.rs
-touch src/session/sqlite.rs
+# Copy authentication files
+echo "🔐 Copying authentication modules..."
+copy_and_fix "server_auth_basic_rs.rs" "src/auth/basic.rs"
+copy_and_fix "server_auth_bearer_rs.rs" "src/auth/bearer.rs"
+copy_and_fix "server_auth_api_key_rs.rs" "src/auth/api_key.rs"
 
-# Auth module
-touch src/auth/mod.rs
-touch src/auth/basic.rs
-touch src/auth/bearer.rs
-touch src/auth/api_key.rs
+# Copy session management files
+echo "💾 Copying session management..."
+copy_and_fix "server_session_rs.rs" "src/session/mod.rs"
+copy_and_fix "server_session_memory_rs.rs" "src/session/memory.rs"
+copy_and_fix "server_session_file_rs.rs" "src/session/file.rs"
+copy_and_fix "server_sqlite_session_rs.rs" "src/session/sqlite.rs"
 
-# Handlers module
-touch src/handlers/mod.rs
-touch src/handlers/static_files.rs
-touch src/handlers/proxy.rs
+# Copy adapter files
+echo "🔌 Copying adapters..."
+copy_and_fix "server_adapters_rs.rs" "src/adapters/mod.rs"
+copy_and_fix "server_storage_adapter_rs.rs" "src/adapters/storage.rs"
+copy_and_fix "server_redis_adapter_rs.rs" "src/adapters/redis.rs"
 
-# Utils module
-touch src/utils/mod.rs
-touch src/utils/templates.rs
-touch src/utils/logging.rs
+# Copy utility files
+echo "🛠️ Copying utilities..."
+copy_and_fix "server_utils_rs.rs" "src/utils/mod.rs"
+copy_and_fix "server_logging_rs.rs" "src/utils/logging.rs"
+copy_and_fix "server_templates_rs.rs" "src/templates/mod.rs"
 
-# CLI module
-touch src/cli/mod.rs
-touch src/cli/daemon.rs
-touch src/cli/commands.rs
+# Copy CLI files
+echo "⌨️ Copying CLI interface..."
+copy_and_fix "server_cli_rs.rs" "src/cli/mod.rs"
+copy_and_fix "server_commands_rs.rs" "src/cli/commands.rs"
+copy_and_fix "server_daemon_rs.rs" "src/cli/daemon.rs"
 
-# Adapters module
-touch src/adapters/mod.rs
-touch src/adapters/redis.rs
-touch src/adapters/database.rs
-touch src/adapters/storage.rs
+# Copy examples
+echo "📚 Copying examples..."
+copy_and_fix "integration_example.rs" "examples/integration.rs"
+copy_and_fix "usage_example.rs" "examples/basic_usage.rs"
 
-# Examples
-touch examples/complete_example.rs
+# Create missing module files
+echo "📝 Creating missing mod.rs files..."
+[ ! -f "src/auth/mod.rs" ] && echo "pub mod basic;\npub mod bearer;\npub mod api_key;" > src/auth/mod.rs
 
 echo ""
-echo "✅ Project structure created!"
+echo "✅ Nox Server structure created and files copied!"
+echo ""
+echo "📋 Files successfully migrated from src_ref/ with naming fixes applied:"
+echo "  ✅ mini_api_server → nox"
+echo "  ✅ mini-api-server → nox" 
+echo "  ✅ Mini API Server → Nox Server"
 echo ""
 echo "📋 Next steps:"
-echo "1. Copy content from each artifact into the corresponding file"
-echo "2. Run 'cargo check' to verify everything compiles"
-echo "3. Run 'cargo build --release' to build the server"
+echo "1. Run 'cargo check' to identify any compilation issues"
+echo "2. Fix any remaining import/module issues"
+echo "3. Run 'cargo build' to build the server"
+echo "4. Test with 'cargo run --bin nox --help'"
 echo ""
-echo "📁 Files to copy from artifacts:"
+echo "📁 Key files created:"
+echo "  📄 src/lib.rs (main library)"
+echo "  📄 src/main.rs (binary entry point)"
+echo "  📄 build.rs (build script)"
+echo "  🔌 Plugin system in src/plugins/"
+echo "  🔐 Authentication in src/auth/"
+echo "  💾 Session management in src/session/"
+echo "  🌐 Request handlers in src/handlers/"
+echo "  ⌨️ CLI interface in src/cli/"
 echo ""
-echo "ROOT LEVEL:"
-echo "  Cargo.toml → Cargo.toml"
-echo "  build.rs → build.rs" 
-echo "  README.md → README.md"
-echo "  mini-api-server.yaml → mini-api-server.yaml"
+echo "🎯 Pro tip: Start with 'cargo check' to see what needs fixing first!"
 echo ""
-echo "MAIN SOURCE:"
-echo "  src/lib.rs → src/lib.rs"
-echo "  src/main.rs → src/main.rs"
-echo "  src/error.rs → src/error.rs"
-echo "  src/config.rs → src/config.rs"
-echo ""
-echo "SERVER MODULE:"
-echo "  src/server/mod.rs → src/server/mod.rs"
-echo "  src/server/router.rs → src/server/router.rs"
-echo ""
-echo "PLUGINS MODULE:"
-echo "  src/plugins/mod.rs → src/plugins/mod.rs"
-echo "  src/plugins/manager.rs → src/plugins/manager.rs"
-echo "  src/plugins/mock.rs → src/plugins/mock.rs"
-echo "  src/plugins/health.rs → src/plugins/health.rs"
-echo ""
-echo "SESSION MODULE:"
-echo "  src/session/mod.rs → src/session/mod.rs"
-echo "  src/session/memory.rs → src/session/memory.rs"
-echo "  src/session/file.rs → src/session/file.rs"
-echo "  src/session/sqlite.rs → src/session/sqlite.rs"
-echo ""
-echo "AUTH MODULE:"
-echo "  src/auth/mod.rs → src/auth/mod.rs"
-echo "  src/auth/basic.rs → src/auth/basic.rs"
-echo "  src/auth/bearer.rs → src/auth/bearer.rs"
-echo "  src/auth/api_key.rs → src/auth/api_key.rs"
-echo ""
-echo "HANDLERS MODULE:"
-echo "  src/handlers/mod.rs → src/handlers/mod.rs"
-echo "  src/handlers/static_files.rs → src/handlers/static_files.rs"
-echo "  src/handlers/proxy.rs → src/handlers/proxy.rs"
-echo ""
-echo "UTILS MODULE:"
-echo "  src/utils/mod.rs → src/utils/mod.rs"
-echo "  src/utils/templates.rs → src/utils/templates.rs"
-echo "  src/utils/logging.rs → src/utils/logging.rs"
-echo ""
-echo "CLI MODULE:"
-echo "  src/cli/mod.rs → src/cli/mod.rs"
-echo "  src/cli/daemon.rs → src/cli/daemon.rs"
-echo "  src/cli/commands.rs → src/cli/commands.rs"
-echo ""
-echo "ADAPTERS MODULE:"
-echo "  src/adapters/mod.rs → src/adapters/mod.rs"
-echo "  src/adapters/redis.rs → src/adapters/redis.rs"
-echo "  src/adapters/storage.rs → src/adapters/storage.rs"
-echo ""
-echo "EXAMPLES:"
-echo "  examples/complete_example.rs → examples/complete_example.rs"
-echo ""
-echo "🎯 Pro tip: Copy files in this order to minimize compilation errors:"
-echo "1. Cargo.toml, build.rs (build files)"
-echo "2. src/error.rs (base types)"
-echo "3. src/config.rs (configuration)"
-echo "4. src/lib.rs (module declarations)"
-echo "5. All the module files"
-echo "6. src/main.rs (entry point)"
-echo "7. Examples and config"
-
-cd ..
-echo ""
-echo "🚀 Ready to build your modular API server!"
+echo "🚀 Ready to build your Nox Server!"

@@ -2,7 +2,7 @@
 
 ## 🔗 **Perfect Pairing Architecture**
 
-The Modular API Client and Mini API Server were designed as complementary tools:
+The Modular API Client and Nox Server were designed as complementary tools:
 
 | Feature | API Client | API Server | Integration |
 |---------|------------|------------|-------------|
@@ -20,7 +20,7 @@ The Modular API Client and Mini API Server were designed as complementary tools:
 ### **1. Development Workflow**
 ```bash
 # Start mock server
-mini-api-server start --config dev-mocks.yaml
+nox start --config dev-mocks.yaml
 
 # Client tests against mocks  
 cargo run --example test_client

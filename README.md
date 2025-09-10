@@ -23,7 +23,7 @@ A lightweight, modular HTTP API server built with Rust and Hyper, designed for m
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd mini-api-server
+cd nox_server
 
 # Build the server
 cargo build --release
@@ -36,33 +36,33 @@ cargo install --path .
 
 ```bash
 # Start server with default configuration
-mini-api-server start
+nox start
 
 # Start in foreground mode (for development)
-mini-api-server start --foreground
+nox start --foreground
 
 # Stop the server
-mini-api-server stop
+nox stop
 
 # Check server status
-mini-api-server status
+nox status
 
 # Restart server
-mini-api-server restart
+nox restart
 
 # View logs
-mini-api-server logs --follow
+nox logs --follow
 
 # Validate configuration
-mini-api-server config
+nox config
 
 # Export default configuration
-mini-api-server config --export --file my-config.yaml
+nox config --export --file my-config.yaml
 ```
 
 ### Configuration
 
-Create a `mini-api-server.yaml` file:
+Create a `nox.yaml` configuration file:
 
 ```yaml
 server:
@@ -219,82 +219,82 @@ session:
 
 ```bash
 # Start server as daemon
-mini-api-server start
+nox start
 
 # Start in foreground (development)
-mini-api-server start --foreground
+nox start --foreground
 
 # Stop server gracefully
-mini-api-server stop
+nox stop
 
 # Force stop server
-mini-api-server stop --force
+nox stop --force
 
 # Restart server
-mini-api-server restart
+nox restart
 
 # Check server status
-mini-api-server status
+nox status
 ```
 
 ### Configuration
 
 ```bash
 # Validate configuration
-mini-api-server config
+nox config
 
 # Show effective configuration
-mini-api-server config --show
+nox config --show
 
 # Export default configuration
-mini-api-server config --export --file default.yaml
+nox config --export --file default.yaml
 
 # Use custom config file
-mini-api-server --config custom.yaml start
+nox --config custom.yaml start
 ```
 
 ### Monitoring
 
 ```bash
 # View server logs
-mini-api-server logs
+nox logs
 
 # Follow logs (like tail -f)
-mini-api-server logs --follow
+nox logs --follow
 
 # Show last 50 lines
-mini-api-server logs --lines 50
+nox logs --lines 50
 
 # Check health status
-mini-api-server health
+nox health
 
 # Show detailed health info
-mini-api-server health --detailed
+nox health --detailed
 
 # List enabled plugins
-mini-api-server plugins
+nox plugins
 
 # Show detailed plugin info
-mini-api-server plugins --detailed
+nox plugins --detailed
 ```
 
 ### Session Management
 
 ```bash
 # List active sessions
-mini-api-server sessions list
+nox sessions list
 
 # Show session details
-mini-api-server sessions show <session-id>
+nox sessions show <session-id>
 
 # Delete session
-mini-api-server sessions delete <session-id>
+nox sessions delete <session-id>
 
 # Clean up expired sessions
-mini-api-server sessions cleanup
+nox sessions cleanup
 
 # Show session statistics
-mini-api-server sessions stats
+nox sessions stats
 ```
 
 ## Built-in Endpoints
@@ -318,7 +318,7 @@ mini-api-server sessions stats
 Create custom handlers by implementing the `Handler` trait:
 
 ```rust
-use mini_api_server::prelude::*;
+use nox::prelude::*;
 
 struct CustomHandler;
 
@@ -345,7 +345,7 @@ impl Handler for CustomHandler {
 Create plugins by implementing the `Plugin` trait:
 
 ```rust
-use mini_api_server::prelude::*;
+use nox::prelude::*;
 
 struct MetricsPlugin {
     request_count: AtomicU64,
@@ -387,7 +387,7 @@ impl Plugin for MetricsPlugin {
 ### Programmatic Usage
 
 ```rust
-use mini_api_server::prelude::*;
+use nox::prelude::*;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -467,16 +467,16 @@ RUN cargo build --release
 
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates
-COPY --from=builder /app/target/release/mini-api-server /usr/local/bin/
-COPY mini-api-server.yaml /etc/mini-api-server/
+COPY --from=builder /app/target/release/nox /usr/local/bin/
+COPY nox.yaml /etc/nox/
 EXPOSE 8080
-CMD ["mini-api-server", "--config", "/etc/mini-api-server/mini-api-server.yaml", "start", "--foreground"]
+CMD ["nox", "--config", "/etc/nox/nox.yaml", "start", "--foreground"]
 ```
 
 ```bash
 # Build and run
-docker build -t mini-api-server .
-docker run -p 8080:8080 -v $(pwd)/config.yaml:/etc/mini-api-server/mini-api-server.yaml mini-api-server
+docker build -t nox .
+docker run -p 8080:8080 -v $(pwd)/config.yaml:/etc/nox/nox.yaml nox
 ```
 
 ## Development
@@ -486,7 +486,7 @@ docker run -p 8080:8080 -v $(pwd)/config.yaml:/etc/mini-api-server/mini-api-serv
 ```bash
 # Clone repository
 git clone <repository-url>
-cd mini-api-server
+cd nox_server
 
 # Build with all features
 cargo build --features sqlite,redis
@@ -607,7 +607,7 @@ Use as a target for load testing tools:
 
 ```bash
 # Start server optimized for load testing
-mini-api-server --config load-test.yaml start
+nox --config load-test.yaml start
 ```
 
 ### 5. Integration Testing
@@ -616,14 +616,14 @@ Use in CI/CD pipelines for integration tests:
 
 ```bash
 # Start mock server in background
-mini-api-server start &
+nox start &
 sleep 2
 
 # Run integration tests
 npm test
 
 # Stop server
-mini-api-server stop
+nox stop
 ```
 
 ## Performance
@@ -660,4 +660,4 @@ MIT License - see LICENSE file for details.
 - [ ] Kubernetes operator
 - [ ] Terraform provider
 
-This mini API server provides a solid foundation that can grow from simple mocking to complex production scenarios while maintaining simplicity and extensibility!
+This Nox server provides a solid foundation that can grow from simple mocking to complex production scenarios while maintaining simplicity and extensibility!

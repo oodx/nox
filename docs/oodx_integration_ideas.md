@@ -19,7 +19,7 @@ impl CliApp {
         // - Health dashboard
         
         let ui = TerminalUI::new()
-            .with_title("Mini API Server Control Panel")
+            .with_title("Nox Server Control Panel")
             .with_status_bar()
             .with_log_panel();
             
@@ -173,7 +173,7 @@ impl EnhancedStreamHandler {
 // integration/coordinated_streaming.rs
 pub struct CoordinatedStreaming {
     client: modular_api_client::ApiClient,
-    server: mini_api_server::Server,
+    server: nox::Server,
     xstream: oodx_xstream::Coordinator,
 }
 
@@ -225,7 +225,7 @@ impl OodxPlugin for TerminalUIPlugin {
 // integration/oodx_testing.rs
 pub struct OodxTestFramework {
     client: modular_api_client::ApiClient,
-    server: mini_api_server::Server,
+    server: nox::Server,
     terminal: oodx_terminal::TestUI,
     streams: oodx_xstream::TestStreams,
 }

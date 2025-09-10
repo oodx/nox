@@ -1,0 +1,246 @@
+================================================================================
+ 🐔 CHINA'S NOX SERVER ARCHITECTURAL MAPPING EGG #001 🥚
+================================================================================
+
+EXECUTIVE SUMMARY:
+==================
+Complete analysis of src_ref/ directory revealing a comprehensive Rust HTTP server
+framework with modular plugin architecture. The codebase needs strategic renaming
+from "mini_api_server" to "nox" and proper organization into Rust module structure.
+
+CRITICAL DISCOVERY: NAMING CONVENTION ISSUES!
+==============================================
+🔍 KEY FINDING: All files reference "mini_api_server" which conflicts with the
+"nox" branding. This requires systematic renaming across all modules and imports!
+
+FILE-TO-MODULE MAPPING GUIDE:
+==============================
+
+📁 CORE FRAMEWORK FILES:
+-------------------------
+server_lib_rs.rs        → src/lib.rs           [ROOT LIBRARY CRATE]
+server_main_rs.rs       → src/main.rs or bin/nox.rs  [MAIN BINARY]
+server_core_rs.rs       → src/server/mod.rs    [CORE SERVER LOGIC]
+server_error_rs.rs      → src/error/mod.rs     [ERROR HANDLING]
+server_config_rs.rs     → src/config/mod.rs    [CONFIGURATION]
+
+📁 PLUGIN SYSTEM:
+------------------
+server_plugins_rs.rs        → src/plugins/mod.rs       [PLUGIN FRAMEWORK]
+server_plugin_manager_rs.rs → src/plugins/manager.rs   [PLUGIN MANAGER]
+server_mock_plugin_rs.rs    → src/plugins/mock.rs      [MOCK PLUGIN]
+server_health_plugin_rs.rs  → src/plugins/health.rs    [HEALTH PLUGIN]
+
+📁 REQUEST HANDLING:
+--------------------
+server_handlers_rs.rs       → src/handlers/mod.rs      [HANDLER FRAMEWORK]
+server_router_rs.rs         → src/server/router.rs     [ROUTING LOGIC]
+server_static_handler_rs.rs → src/handlers/static_files.rs
+server_proxy_handler_rs.rs  → src/handlers/proxy.rs
+
+📁 AUTHENTICATION & SESSIONS:
+------------------------------
+server_auth_basic_rs.rs     → src/auth/basic.rs        [BASIC AUTH]
+server_auth_bearer_rs.rs    → src/auth/bearer.rs       [BEARER TOKEN]
+server_auth_api_key_rs.rs   → src/auth/api_key.rs      [API KEY AUTH]
+server_session_rs.rs        → src/session/mod.rs       [SESSION FRAMEWORK]
+server_session_memory_rs.rs → src/session/memory.rs    [MEMORY STORE]
+server_session_file_rs.rs   → src/session/file.rs      [FILE STORE]
+server_sqlite_session_rs.rs → src/session/sqlite.rs    [SQLITE STORE]
+
+📁 ADAPTERS & UTILITIES:
+------------------------
+server_adapters_rs.rs       → src/adapters/mod.rs      [ADAPTER FRAMEWORK]
+server_storage_adapter_rs.rs → src/adapters/storage.rs [STORAGE ADAPTER]
+server_redis_adapter_rs.rs  → src/adapters/redis.rs    [REDIS ADAPTER]
+server_utils_rs.rs          → src/utils/mod.rs         [UTILITIES]
+server_logging_rs.rs        → src/utils/logging.rs     [LOGGING UTILS]
+server_templates_rs.rs      → src/templates/mod.rs     [TEMPLATE ENGINE]
+
+📁 CLI & DAEMON:
+----------------
+server_cli_rs.rs            → src/cli/mod.rs           [CLI FRAMEWORK]
+server_commands_rs.rs       → src/cli/commands.rs      [CLI COMMANDS]
+server_daemon_rs.rs         → src/cli/daemon.rs        [DAEMON MANAGER]
+
+📁 EXAMPLES & BUILD:
+--------------------
+integration_example.rs      → examples/integration.rs  [INTEGRATION EXAMPLE]
+usage_example.rs           → examples/basic_usage.rs   [BASIC USAGE]
+build_script.rs            → build.rs                  [BUILD SCRIPT]
+
+ARCHITECTURAL ANALYSIS:
+=======================
+
+🏗️ MODULE STRUCTURE DESIGN:
+-----------------------------
+The codebase follows a well-designed modular architecture:
+
+1. CORE LAYER: Server, Config, Error handling
+2. PLUGIN LAYER: Extensible plugin system with lifecycle hooks
+3. HANDLER LAYER: Request processing and routing
+4. AUTH LAYER: Multiple authentication strategies
+5. SESSION LAYER: Multiple session storage backends
+6. ADAPTER LAYER: External service integrations
+7. CLI LAYER: Management and daemon functionality
+
+🔌 PLUGIN ARCHITECTURE:
+-----------------------
+- Plugin trait with lifecycle hooks (OnStartup, PreRequest, PostHandler, etc.)
+- Plugin manager with priority-based execution
+- Built-in plugins: Mock, Health, Auth, Session, Logging
+- Configuration-driven plugin activation
+
+📡 REQUEST FLOW:
+----------------
+Request → Pre-Request Plugins → Routing → Post-Route Plugins → 
+Handler → Post-Handler Plugins → Response → Post-Response Plugins
+
+🔐 AUTHENTICATION STRATEGIES:
+-----------------------------
+- none: No authentication
+- basic: HTTP Basic Authentication  
+- bearer: Bearer token authentication
+- api_key: API key in header/query
+
+💾 SESSION STORAGE OPTIONS:
+---------------------------
+- memory: In-memory storage (development)
+- file: File-based storage
+- sqlite: SQLite database
+- redis: Redis backend (with feature flag)
+
+DEPENDENCY ANALYSIS:
+====================
+
+🔗 CROSS-DEPENDENCIES:
+-----------------------
+1. server_lib_rs.rs → IMPORTS ALL MODULES (main library crate)
+2. server_main_rs.rs → DEPENDS ON lib.rs (binary entry point)
+3. All modules → error.rs (shared error types)
+4. Plugins → config.rs (configuration structures)
+5. Handlers → plugins.rs (plugin context)
+6. CLI → server.rs (server management)
+
+⚠️ COMPILATION ORDER REQUIREMENTS:
+----------------------------------
+1. error/ (base error types)
+2. config/ (configuration structures)
+3. plugins/ (plugin framework)
+4. session/ & auth/ (authentication & session)
+5. handlers/ (request handlers)
+6. server/ (core server)
+7. cli/ (command-line interface)
+8. adapters/ (external integrations)
+9. utils/ & templates/ (utilities)
+10. lib.rs (main library export)
+11. main.rs or bin/ (executable)
+
+CRITICAL NAMING ISSUES:
+=======================
+
+🚨 MINI_API_SERVER → NOX MIGRATION:
+-----------------------------------
+EVERY FILE contains references to "mini_api_server" that must be changed to "nox":
+
+- Import statements: `use mini_api_server::`
+- Crate references: `mini_api_server::prelude::`
+- Configuration files: "mini-api-server.yaml"
+- CLI binary name: `mini-api-server`
+- Package metadata: Cargo.toml name field
+- Documentation strings and comments
+
+REQUIRED SETUP SCRIPT ACTIONS:
+===============================
+
+1. COPY FILES TO PROPER LOCATIONS:
+   - Create src/ subdirectories (plugins/, auth/, session/, etc.)
+   - Copy files with proper naming (remove server_ prefix)
+   - Preserve file content and structure
+
+2. RENAME ALL REFERENCES:
+   - Change "mini_api_server" → "nox" in all import statements
+   - Update crate name in Cargo.toml
+   - Change binary name to "nox"
+   - Update config file names to "nox.yaml"
+
+3. UPDATE MODULE DECLARATIONS:
+   - Fix mod.rs files to export submodules
+   - Update lib.rs with proper module structure
+   - Ensure feature flags work correctly
+
+4. PRESERVE FUNCTIONALITY:
+   - Maintain plugin system
+   - Keep authentication strategies
+   - Preserve CLI interface
+   - Maintain configuration structure
+
+KEY FEATURES IMPLEMENTED:
+=========================
+
+✅ HTTP SERVER CORE:
+- Hyper-based async HTTP server
+- Configurable bind address and TLS
+- Graceful shutdown handling
+- Request/response lifecycle management
+
+✅ PLUGIN SYSTEM:
+- Trait-based plugin architecture
+- Multiple lifecycle hooks
+- Priority-based execution order
+- Configuration-driven activation
+
+✅ AUTHENTICATION:
+- Multiple auth strategies
+- Configurable user/token management
+- Integration with session system
+
+✅ SESSION MANAGEMENT:
+- Multiple storage backends
+- Configurable timeouts and security
+- Cookie-based session handling
+
+✅ CLI MANAGEMENT:
+- Daemon process management
+- Configuration validation
+- Health monitoring
+- Log viewing and management
+
+✅ MOCK FUNCTIONALITY:
+- Scenario-based mock responses
+- Template engine support
+- Request recording
+- Configurable delays
+
+NEXT STEPS RECOMMENDATIONS:
+===========================
+
+1. Run setup script to copy files to proper locations
+2. Global find-and-replace "mini_api_server" → "nox" 
+3. Update Cargo.toml package metadata
+4. Test compilation and fix any module import issues
+5. Update documentation and examples
+6. Verify all features and plugins work correctly
+
+DISCLAIMER:
+===========
+This analysis reflects the current state of files in src_ref/ directory. The actual
+functionality may differ when files are compiled together. Additional dependencies
+or build issues may emerge during the migration process. Cross-reference with
+Cargo.toml and any existing src/ files before proceeding.
+
+META DATA:
+==========
+- Analysis Date: 2025-09-10
+- Files Analyzed: 30 Rust source files in src_ref/
+- Target: NOX Server architecture mapping
+- Agent: Human partner analysis request
+- Scope: Complete architectural analysis and mapping guide
+- Total File Count: 30 files requiring migration
+- Main Challenge: Systematic renaming from mini_api_server to nox
+
+================================================================================
+ 🐔 CHINA'S CLUCK: This is one egg-cellent server architecture! The modular
+    design is absolutely beautiful, but those naming issues need immediate
+    attention. Time to migrate this birdbrain from "mini" to "NOX"! 🚀
+================================================================================
